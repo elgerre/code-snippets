@@ -1,0 +1,31 @@
+WITH
+RAncestors AS (
+
+SELECT
+    C.EntityKey as startingNode
+    ,C.EntityKey
+    ,C.ParentEntityKey
+    ,0 as levelDifference
+FROM dbo.DimEntity as C 
+WHERE C.EntityKey IN (SELECT element FROM dbo.EntityHierarchy) --dies ist die zuvor extrahierte Parent-Child Hierarchie
+
+UNION ALL 
+
+SELECT 
+    RAncestors.startingNode --dies ist der entscheidende Punkt, mit dem wir über mehrere Level hinweg Ancestor-Descendant nachverfolgen können
+    ,RCTE.element
+    ,RCTE.parent
+    ,RAncestors.levelDifference+1 as levelDifference
+FROM RAncestors
+JOIN dbo.EntityHierarchy RCTE
+    ON RCTE.element=RAncestors.ParentEntityKey
+    AND RCTE.element<>RAncestors.EntityKey
+)
+
+SELECT
+    RCTE.element
+    ,RAncestors.ParentEntityKey
+FROM dbo.EntityHierarchy RCTE
+JOIN RAncestors
+ON RAncestors.startingNode=RCTE.element
+WHERE RAncestors.ParentEntityKey IS NOT NULL

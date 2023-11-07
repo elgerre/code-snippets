@@ -1,0 +1,23 @@
+WITH 
+RCTE AS (
+SELECT
+    A.EntityKey
+    ,A.ParentEntityKey
+    ,0 as hierarchyLevel
+FROM dbo.DimEntity as A
+WHERE A.ParentEntityKey IS NULL
+
+UNION ALL
+
+SELECT 
+    B.EntityKey
+    ,B.ParentEntityKey
+    ,RCTE.hierarchyLevel+1 as hierarchyLevel
+FROM dbo.DimEntity as B
+INNER JOIN RCTE 
+    ON RCTE.EntityKey=B.ParentEntityKey
+)
+
+SELECT 
+*
+FROM RCTE
