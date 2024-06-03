@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Playlist"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "18bbbfdf-d50c-4928-9083-cf896d3c246d"
+  }
+}

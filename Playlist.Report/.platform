@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Playlist"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "96fb6bc8-35af-41ab-9d7a-7c6757895344"
+  }
+}
