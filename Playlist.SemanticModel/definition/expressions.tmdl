@@ -1,0 +1,43 @@
+expression df =
+		let
+		    Source = Python.Execute("from ytmusicapi import YTMusic#(lf)import json#(lf)import pandas as pd#(lf)ytmusic = YTMusic()#(lf)playlist=ytmusic.get_playlist(playlistId=""PLLUwvN74i5M7uuzGi6vRaUehPY4njg036"",limit=None)#(lf)df=pd.json_normalize(playlist[""tracks""])#(lf)#(lf)df=df[[""videoId"",""title"",""views"",""duration_seconds""]]#(lf)df2=pd.json_normalize(playlist[""tracks""],record_path=[""artists""], meta = [""videoId""], record_prefix=""artists_"", meta_prefix=""song_"")[[""artists_name"",""song_videoId""]]#(lf)df3=pd.json_normalize(playlist[""tracks""],record_path=[""thumbnails""], meta = [""videoId""], record_prefix=""thumbnail_"", meta_prefix=""song_"")[[""thumbnail_url"",""song_videoId""]]#(lf)"),
+		    df1 = Source{[Name="df"]}[Value],
+		    #"Changed Type" = Table.TransformColumnTypes(df1,{{"videoId", type text}, {"title", type text}, {"views", type text}, {"duration_seconds", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: 2c35402d-fc91-48ea-b6b8-41626cc6e541
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression df2 =
+		let
+		    Source = Python.Execute("from ytmusicapi import YTMusic#(lf)import json#(lf)import pandas as pd#(lf)ytmusic = YTMusic()#(lf)playlist=ytmusic.get_playlist(playlistId=""PLLUwvN74i5M7uuzGi6vRaUehPY4njg036"",limit=None)#(lf)df=pd.json_normalize(playlist[""tracks""])#(lf)#(lf)df=df[[""videoId"",""title"",""views"",""duration_seconds""]]#(lf)df2=pd.json_normalize(playlist[""tracks""],record_path=[""artists""], meta = [""videoId""], record_prefix=""artists_"", meta_prefix=""song_"")[[""artists_name"",""song_videoId""]]#(lf)df3=pd.json_normalize(playlist[""tracks""],record_path=[""thumbnails""], meta = [""videoId""], record_prefix=""thumbnail_"", meta_prefix=""song_"")[[""thumbnail_url"",""song_videoId""]]#(lf)"),
+		    df1 = Source{[Name="df2"]}[Value],
+		    #"Changed Type" = Table.TransformColumnTypes(df1,{{"artists_name", type text}, {"song_videoId", type text}}),
+		    #"Grouped Rows" = Table.Group(#"Changed Type", {"song_videoId"}, {{"Artists", each Text.Combine([artists_name],", "), type nullable text}})
+		in
+		    #"Grouped Rows"
+	lineageTag: 449d626f-db73-4208-9bcd-e610026ecd81
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression df3 =
+		let
+		    Source = Python.Execute("from ytmusicapi import YTMusic#(lf)import json#(lf)import pandas as pd#(lf)ytmusic = YTMusic()#(lf)playlist=ytmusic.get_playlist(playlistId=""PLLUwvN74i5M7uuzGi6vRaUehPY4njg036"",limit=None)#(lf)df=pd.json_normalize(playlist[""tracks""])#(lf)#(lf)df=df[[""videoId"",""title"",""views"",""duration_seconds""]]#(lf)df2=pd.json_normalize(playlist[""tracks""],record_path=[""artists""], meta = [""videoId""], record_prefix=""artists_"", meta_prefix=""song_"")[[""artists_name"",""song_videoId""]]#(lf)df3=pd.json_normalize(playlist[""tracks""],record_path=[""thumbnails""], meta = [""videoId""], record_prefix=""thumbnail_"", meta_prefix=""song_"")[[""thumbnail_url"",""song_videoId""]]#(lf)"),
+		    df1 = Source{[Name="df3"]}[Value],
+		    #"Changed Type" = Table.TransformColumnTypes(df1,{{"thumbnail_url", type text}, {"song_videoId", type text}}),
+		    #"Inserted Text Between Delimiters" = Table.AddColumn(#"Changed Type", "Text Between Delimiters", each Text.BetweenDelimiters([thumbnail_url], "=w", "-"), type text),
+		    #"Filtered Rows" = Table.SelectRows(#"Inserted Text Between Delimiters", each ([Text Between Delimiters] <> "60")),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Text Between Delimiters"})
+		in
+		    #"Removed Columns"
+	lineageTag: e1ef3827-fbdc-40c9-921c-4829449f3ac7
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

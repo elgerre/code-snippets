@@ -1,0 +1,100 @@
+table Playlist
+	lineageTag: 30b7eecb-a9ce-4f82-abb4-2a0828e369a5
+
+	measure 'Average duration' =
+			
+			VAR _zeit=AVERAGE('Playlist'[duration_seconds])
+			VAR _sekunden=INT(MOD(_zeit,60))
+			VAR _minuten=MOD(INT(_zeit/60),60)
+			RETURN
+			RIGHT("0"&_minuten,2) & ":" & RIGHT("00"&_sekunden,2)
+		lineageTag: cb34b741-bb90-4fb1-8859-3f457e1938d3
+
+	measure '# of distinct songs' = DISTINCTCOUNT('Playlist'[title])
+		formatString: 0
+		lineageTag: b336fe77-441c-4fdb-ac57-bf874369ac33
+
+	measure 'Duration in minutes' = SUM('Playlist'[duration_seconds])/60
+		formatString: 0.00
+		lineageTag: 1db3fa0b-8b9a-4b10-9d43-91697ec8647e
+
+	measure 'Duration in seconds' = ```
+			SUM('Playlist'[duration_seconds])
+			
+			```
+		formatString: 0
+		lineageTag: b2ae79c8-37a9-40a3-8543-025235b8487f
+
+	measure 'Total # of songs' = COUNTROWS('Playlist')
+		formatString: 0
+		lineageTag: 27082a7f-9503-4ea4-88d8-92c28886ed79
+
+	measure 'Total duration' =
+			
+			VAR _zeit=SUM('Playlist'[duration_seconds])
+			VAR _sekunden=MOD(_zeit,60)
+			VAR _minuten=MOD(INT(_zeit/60),60)
+			VAR _stunden=INT(_zeit/3600)
+			RETURN
+			_stunden & ":" & RIGHT("0"&_minuten,2) & ":" & RIGHT("0"&_sekunden,2)
+		lineageTag: fffdb134-3ce7-4967-a903-6fdc5dbc7bd5
+
+	column title
+		dataType: string
+		lineageTag: 3a9af30a-04fa-48ee-9f57-0a3dea0d5635
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column album
+		dataType: string
+		lineageTag: 74774b2b-4ffa-4629-9c6a-d6713458de38
+		summarizeBy: none
+		sourceColumn: album
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_seconds
+		dataType: int64
+		formatString: 0
+		lineageTag: 4bec980c-48c0-421e-bc27-f17a10fb2f28
+		summarizeBy: sum
+		sourceColumn: duration_seconds
+
+		annotation SummarizationSetBy = Automatic
+
+	column artists
+		dataType: string
+		lineageTag: ee834a95-1f56-43ab-9ee8-5d23480fe265
+		summarizeBy: none
+		sourceColumn: artists
+
+		annotation SummarizationSetBy = Automatic
+
+	column cover
+		dataType: string
+		lineageTag: 06fe72b7-dad2-4793-b390-95cf53c4ec7b
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: cover
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Playlist = m
+		mode: import
+		source =
+				let
+				    Source = Table.NestedJoin(df, {"videoId"}, df2, {"song_videoId"}, "df2", JoinKind.LeftOuter),
+				    #"Merged Queries" = Table.NestedJoin(Source, {"videoId"}, df3, {"song_videoId"}, "df3", JoinKind.LeftOuter),
+				    #"Expanded df2" = Table.ExpandTableColumn(#"Merged Queries", "df2", {"Artists"}, {"df2.Artists"}),
+				    #"Expanded df3" = Table.ExpandTableColumn(#"Expanded df2", "df3", {"thumbnail_url"}, {"df3.thumbnail_url"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded df3",{"videoId"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"views", "album"}, {"df2.Artists", "artists"}, {"df3.thumbnail_url", "cover"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,21 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: de-DE
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["df","df2","df3","Playlist"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.129.905.0 (24.05)
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_7633ef39-a902-4497-8bad-a8a66e3ffd9e
+ref table Playlist
+
+ref cultureInfo en-US
+
