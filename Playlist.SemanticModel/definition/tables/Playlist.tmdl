@@ -39,6 +39,27 @@ table Playlist
 			_stunden & ":" & RIGHT("0"&_minuten,2) & ":" & RIGHT("0"&_sekunden,2)
 		lineageTag: fffdb134-3ce7-4967-a903-6fdc5dbc7bd5
 
+	measure '# of artists' = DISTINCTCOUNT(Playlist[artists])
+		formatString: 0
+		lineageTag: 4cb3f0d6-08e4-4fc3-81d3-842de9d46472
+
+	measure 'longest song' =
+			
+			VAR _zeit=MAX(Playlist[duration_seconds])
+			VAR _sekunden=INT(MOD(_zeit,60))
+			VAR _minuten=MOD(INT(_zeit/60),60)
+			RETURN
+			RIGHT("0"&_minuten,2) & ":" & RIGHT("00"&_sekunden,2)
+		lineageTag: 67f830c8-aa3a-4c29-99e2-3e0e68ae6135
+
+	measure 'shortest song' =
+			VAR _zeit=MIN(Playlist[duration_seconds])
+			VAR _sekunden=INT(MOD(_zeit,60))
+			VAR _minuten=MOD(INT(_zeit/60),60)
+			RETURN
+			RIGHT("0"&_minuten,2) & ":" & RIGHT("00"&_sekunden,2)
+		lineageTag: b9e384a0-ec74-4284-806e-6a18fe69e26d
+
 	column title
 		dataType: string
 		lineageTag: 3a9af30a-04fa-48ee-9f57-0a3dea0d5635
@@ -93,8 +114,6 @@ table Playlist
 				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"views", "album"}, {"df2.Artists", "artists"}, {"df3.thumbnail_url", "cover"}})
 				in
 				    #"Renamed Columns"
-
-	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
 
