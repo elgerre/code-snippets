@@ -4,14 +4,14 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 611,
+        "x": 0,
         "y": 0
       },
       "nodes": [
         {
           "location": {
-            "x": 1694,
-            "y": 299
+            "x": 265,
+            "y": 103
           },
           "nodeIndex": "Playlist",
           "nodeLineageTag": "30b7eecb-a9ce-4f82-abb4-2a0828e369a5",
