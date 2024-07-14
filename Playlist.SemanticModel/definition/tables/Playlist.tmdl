@@ -68,14 +68,6 @@ table Playlist
 
 		annotation SummarizationSetBy = Automatic
 
-	column album
-		dataType: string
-		lineageTag: 74774b2b-4ffa-4629-9c6a-d6713458de38
-		summarizeBy: none
-		sourceColumn: album
-
-		annotation SummarizationSetBy = Automatic
-
 	column duration_seconds
 		dataType: int64
 		formatString: 0
@@ -102,6 +94,14 @@ table Playlist
 
 		annotation SummarizationSetBy = Automatic
 
+	column album
+		dataType: string
+		lineageTag: 6ca7d96e-a59a-4c6c-9ea3-ab8b79492e59
+		summarizeBy: none
+		sourceColumn: album
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Playlist = m
 		mode: import
 		source =
@@ -111,7 +111,7 @@ table Playlist
 				    #"Expanded df2" = Table.ExpandTableColumn(#"Merged Queries", "df2", {"Artists"}, {"df2.Artists"}),
 				    #"Expanded df3" = Table.ExpandTableColumn(#"Expanded df2", "df3", {"thumbnail_url"}, {"df3.thumbnail_url"}),
 				    #"Removed Columns" = Table.RemoveColumns(#"Expanded df3",{"videoId"}),
-				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"views", "album"}, {"df2.Artists", "artists"}, {"df3.thumbnail_url", "cover"}})
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"album.name", "album"}, {"df2.Artists", "artists"}, {"df3.thumbnail_url", "cover"}})
 				in
 				    #"Renamed Columns"
 
