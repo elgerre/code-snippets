@@ -6,11 +6,19 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["df","df2","df3","Playlist"]
+queryGroup sources
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup load
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation PBI_QueryOrder = ["Playlist","artists","playlist_main","thumbnails"]
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBIDesktopVersion = 2.131.901.0 (24.07)
+annotation PBIDesktopVersion = 2.141.1253.0 (25.03)+74f9999a1e95f78c739f3ea2b96ba340e9ba8729
 
 annotation PBI_ProTooling = ["DevMode"]
 

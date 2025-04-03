@@ -104,10 +104,11 @@ table Playlist
 
 	partition Playlist = m
 		mode: import
+		queryGroup: load
 		source =
 				let
-				    Source = Table.NestedJoin(df, {"videoId"}, df2, {"song_videoId"}, "df2", JoinKind.LeftOuter),
-				    #"Merged Queries" = Table.NestedJoin(Source, {"videoId"}, df3, {"song_videoId"}, "df3", JoinKind.LeftOuter),
+				    Source = Table.NestedJoin(playlist_main, {"videoId"}, artists, {"song_videoId"}, "df2", JoinKind.LeftOuter),
+				    #"Merged Queries" = Table.NestedJoin(Source, {"videoId"}, thumbnails, {"song_videoId"}, "df3", JoinKind.LeftOuter),
 				    #"Expanded df2" = Table.ExpandTableColumn(#"Merged Queries", "df2", {"Artists"}, {"df2.Artists"}),
 				    #"Expanded df3" = Table.ExpandTableColumn(#"Expanded df2", "df3", {"thumbnail_url"}, {"df3.thumbnail_url"}),
 				    #"Removed Columns" = Table.RemoveColumns(#"Expanded df3",{"videoId"}),
@@ -116,4 +117,6 @@ table Playlist
 				    #"Renamed Columns"
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
 
