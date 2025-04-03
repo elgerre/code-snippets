@@ -10,9 +10,10 @@
                 {
                   "value": "Die metallische Liste - Navigation",
                   "textStyle": {
+                    "fontWeight": "bold",
                     "fontFamily": "Constantia",
-                    "fontSize": "16pt",
-                    "color": "#d64550"
+                    "fontSize": "12pt",
+                    "color": "#ffffff"
                   }
                 }
               ]

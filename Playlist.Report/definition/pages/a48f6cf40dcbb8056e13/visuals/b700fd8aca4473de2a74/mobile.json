@@ -10,10 +10,11 @@
                 {
                   "value": "Übersicht",
                   "textStyle": {
+                    "fontWeight": "bold",
                     "fontFamily": "Constantia",
                     "fontStyle": "italic",
                     "fontSize": "16pt",
-                    "color": "#d64550"
+                    "color": "#ffffff"
                   }
                 }
               ],
